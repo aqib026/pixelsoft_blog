@@ -13,7 +13,7 @@ steps to follow
 2. composer update 
 3. copy .env from .env.example
 4. update .env file and update your DB credentials
-5. php artisan generate:key
+5. php artisan key:generate
 5. php artisan migrate
 6. php artisan db:seed
 7. php artisan get:blogs //to fetch data from the API
