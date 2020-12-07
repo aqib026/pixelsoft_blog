@@ -3,7 +3,16 @@
 @section('content')
 <div class="container">
 <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <h6 class="border-bottom border-gray pb-2 mb-0">Recent Blogs</h6>
+    <h6 class="border-bottom border-gray pb-2 mb-0">
+      Recent Blogs
+      <form action="{{ url('/') }}" id="myForm"> 
+        <select name="order" onchange="document.getElementById('myForm').submit();" class="form-control" style="float: right; width:200px;">
+          <option value="DESC">Show Latest </option>
+          <option value="ASC" @if($order == 'ASC') selected="selected" @endif>Show Oldest </option>
+        </select>
+
+      </form>
+    </h6>
 
     @foreach($posts  as $post)
       <div class="media text-muted pt-3">

@@ -18,3 +18,5 @@ Route::get('/', [App\Http\Controllers\PostController::class, 'index'])->name('po
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::resource('posts', App\Http\Controllers\PostController::class)->only('index','create','store');

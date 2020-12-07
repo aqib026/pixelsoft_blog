@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Post;
+use Auth;
 
 class PostController extends Controller
 {
@@ -12,10 +13,18 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::paginate(12);
-        return view('posts',compact('posts'));
+        $posts = new Post;
+        $order = '';
+        if(isset($request->order)){
+            $posts = $posts->orderBy('publication_date', $request->order);
+            $order = $request->order;
+        }else{
+            $posts = $posts->orderBy('publication_date', 'DESC');
+        }
+        $posts = $posts->paginate(12);
+       return view('posts',compact('posts','order'));
     }
 
     /**
@@ -25,7 +34,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.add');
     }
 
     /**
@@ -36,51 +45,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'     => 'required|string|between:2,100',
+            'detail'      => 'required|string|between:2,1000',
+            ]);
+            $data = $request->all();
+
+            if(isset($data['publish'])){
+                $data['publication_date'] = date('Y-m-d');                
+                unset($data['publish']);
+            }
+
+            $data['user_id'] = Auth::user()->id;
+            Post::create($data);
+            
+            return redirect()->route('home')
+            ->with('success', 'Blog created successfully.');
+
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
