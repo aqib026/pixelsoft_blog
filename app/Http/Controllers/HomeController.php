@@ -26,8 +26,8 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $posts = Post::where('user_id',$user->id)->paginate(12);
+        $posts = Post::where('user_id', $user->id)->paginate(12);
 
-        return view('home',compact('posts'));
+        return view('home', compact('posts'));
     }
 }
